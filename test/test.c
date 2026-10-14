@@ -1,22 +1,22 @@
-// #include<stdio.h>
-// #include<stdlib.h>
-// #define BLAH
+#include<stdio.h>
+#include<stdlib.h>
+#define BLAH
 
-// typedef struct E {
-//    const char* s; 
-// } E;
-// // this is a comment
+typedef struct E {
+   const char* s; 
+} E;
+// this is a comment
 
-// int main(int argc, char* argv[]) {
-//     printf("Hello world!\n");
-//     E* e = (E*) malloc(sizeof(E));
-//     printf("%s\n", e->s);
-//     return 0;
-// }
+int main(int argc, char* argv[]) {
+    printf("Hello world!\n");
+    E* e = (E*) malloc(sizeof(E));
+    printf("%s\n", e->s);
+    return 0;
+}
 x: static{const{ptr{int}}};
 zd: static{const{ptr{struct x}}};
 arrx: ptr{arr{View,3}} a
 
-f: fn (x: int64, velocity: static{ptr{int}}, z: struct hello) -> const{float};
-x: ptr { fn(x: fn () -> struct y ) -> void }
-
+f: fn (x: int64, velocity: static{ptr{int}}, z: struct hello, he: int86, hello: size_t) -> const{float};
+x: ptr { fn(x: fn () -> struct y ) -> void };
+y: fn(x: fn () -> struct y ) -> void

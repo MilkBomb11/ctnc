@@ -16,7 +16,12 @@ void args_push(Args* args, NameTypePair ntp)
 {
     if (args->size >= args->capacity) {
         args->capacity *= 2;
-        args->data = realloc(args->data, args->capacity*sizeof(NameTypePair));
+        NameTypePair* temp = realloc(args->data, args->capacity*sizeof(NameTypePair));
+        if (temp == NULL) {
+            printf("Realloc failed for args.");
+            exit(1);
+        }
+        args->data = temp;
     }
     args->data[args->size] = ntp;
     args->size++;

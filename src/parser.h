@@ -25,6 +25,6 @@ void parser_free(Parser* parser);
 Type* parser_parse_type(Parser* parser);
 NameTypePair parser_parse_ntp(Parser* parser);
 Args parser_parse_args(Parser* parser);
-void parser_parse(Parser* parser, const char* text);
+void parser_parse(Parser* parser, StringViewRepo* svr, const char* text);
 
 #endif

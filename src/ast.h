@@ -17,6 +17,7 @@ typedef enum TypeKind {
 
 typedef struct Type Type;
 typedef struct NameTypePair NameTypePair;
+typedef struct StringBuilder StringBuilder;
 
 struct Type {
     TypeKind kind;
@@ -45,7 +46,9 @@ Type* ast_make_arr(Type* elem, size_t size);
 Type* ast_make_func(Args args, Type* ret);
 
 NameTypePair ast_make_ntp(StringView name, Type* type);
+void ast_print_ntp(NameTypePair* ntp);
 
 void ast_free_type(Type* type);
 void ast_print_type(Type* type);
+void ast_translate_to_c(NameTypePair ntp, StringBuilder* sb);
 #endif

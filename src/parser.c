@@ -20,6 +20,8 @@ int parser_advance(Parser* parser)
     parser->is_at_end = 0;
     if (!token_parsed) {
         parser->is_at_end = 1;
+        parser->prev = parser->current; 
+        parser->is_prev_valid = parser->is_current_valid;
         return token_parsed;
     }
 
@@ -138,16 +140,33 @@ NameTypePair parser_parse_ntp(Parser* parser)
     return ast_make_ntp(id.sv, t);
 }
 
-void parser_parse(Parser* parser, const char* text)
+void parser_parse(Parser* parser, StringViewRepo* svr, const char* text)
 {
     while (parser_advance(parser)) {
         if (parser_match(parser, CLEX_id)) {
             Token id = parser->prev;
+            const char* start_ptr = id.sv.ptr;
             if (parser_match(parser, ':')) {
                 Type* t = parser_parse_type(parser);
-                printf("%.*s: ", (int)id.sv.length, id.sv.ptr);
-                ast_print_type(t);
+
+                const char* end_ptr = parser->prev.sv.ptr + parser->prev.sv.length;
+                int length = end_ptr - start_ptr;
+                StringView sv;
+                sv.ptr = start_ptr;
+                sv.length = length;
+                string_view_repo_push(svr, sv);
+                
+                NameTypePair ntp;
+                ntp.name = id.sv;
+                ntp.type = t;
+                ast_print_ntp(&ntp);
                 printf("\n");
+                /**
+                TODO:
+                - implement master sb onto which all characters are pushed.
+                - implement ast_translate_ntp_to_c(ntp, &sb) to convert ntp to equivalent c.
+                **/
+                ast_free_type(t);
             }
         }
     }

@@ -6,6 +6,7 @@
 
 #include "parser.h"
 #include "char_bank.h"
+#include "string_view.h"
 
 size_t get_file_size(FILE* f)
 {
@@ -30,9 +31,14 @@ int main(int argc, char **argv)
     fclose(in_file);
 
     Parser parser;
+    StringViewRepo svr = string_view_repo_create();
+
     parser_init(&parser, text, len);
     char_bank_init();
-    parser_parse(&parser, text);
+    parser_parse(&parser, &svr, text);
+    string_view_repo_print(&svr);
+
     parser_free(&parser);
+    string_view_repo_free(&svr);
     return 0;
 }

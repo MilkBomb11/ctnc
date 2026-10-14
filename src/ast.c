@@ -153,3 +153,17 @@ void ast_print_type(Type* type)
             assert(0 && "unreachable");
     }
 }
+
+void ast_print_ntp(NameTypePair* ntp)
+{
+    StringView name = ntp->name;
+    Type* t = ntp->type;
+    printf("%.*s: ", (int)name.length, name.ptr);
+    ast_print_type(t);
+}
+
+void ast_translate_to_c(NameTypePair ntp, StringBuilder* sb)
+{
+    StringView name = ntp.name;
+    assert(0 && "Unimplemented.");
+}

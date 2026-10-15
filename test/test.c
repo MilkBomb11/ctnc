@@ -19,4 +19,11 @@ arrx: ptr{arr{View,3}} a
 
 f: fn (x: int64, velocity: static{ptr{int}}, z: struct hello, he: int86, hello: size_t) -> const{float};
 x: ptr { fn(x: fn () -> struct y ) -> ptr{ptr{void}} };
-y: fn(x: fn () -> struct y ) -> void
+y: fn(x: fn () -> struct y ) -> void;
+
+f: ptr {fn (val: const{ptr{char}}) -> ptr{const{char}} };
+
+add: fn (x: struct hello, y: Int64, update: ptr{fn (hello: ptr{int}) -> const {static{ptr{ size_t }}} } ) -> ptr{struct T}
+{
+
+}

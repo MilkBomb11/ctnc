@@ -4,6 +4,7 @@
 #include<stddef.h>
 #include "string_view.h"
 #include "args.h"
+#include "injection_points.h"
 
 typedef enum TypeKind {
     TT_ATOM,
@@ -50,5 +51,5 @@ void ast_print_ntp(NameTypePair* ntp);
 
 void ast_free_type(Type* type);
 void ast_print_type(Type* type);
-void ast_translate_to_c(NameTypePair ntp, StringBuilder* sb);
+InjectionPoints ast_translate_to_c(StringView name, Type* type, StringBuilder* sb);
 #endif

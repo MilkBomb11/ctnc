@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "parser.h"
 #include "args.h"
+#include "string_builder.h"
 #include "token.h"
 #include "ast.h"
 #include "string_view.h"
@@ -161,11 +162,13 @@ void parser_parse(Parser* parser, StringViewRepo* svr, const char* text)
                 ntp.type = t;
                 ast_print_ntp(&ntp);
                 printf("\n");
-                /**
-                TODO:
-                - implement master sb onto which all characters are pushed.
-                - implement ast_translate_ntp_to_c(ntp, &sb) to convert ntp to equivalent c.
-                **/
+
+                StringBuilder sb = string_builder_create();
+                ast_translate_to_c(ntp.name, ntp.type, &sb);
+                string_builder_push_char(&sb, '\n');
+                string_builder_print(&sb);
+
+                string_builder_free(&sb);
                 ast_free_type(t);
             }
         }

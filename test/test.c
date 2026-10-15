@@ -18,5 +18,5 @@ zd: static{const{ptr{struct x}}};
 arrx: ptr{arr{View,3}} a
 
 f: fn (x: int64, velocity: static{ptr{int}}, z: struct hello, he: int86, hello: size_t) -> const{float};
-x: ptr { fn(x: fn () -> struct y ) -> void };
+x: ptr { fn(x: fn () -> struct y ) -> ptr{ptr{void}} };
 y: fn(x: fn () -> struct y ) -> void

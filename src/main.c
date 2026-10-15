@@ -40,5 +40,16 @@ int main(int argc, char **argv)
 
     parser_free(&parser);
     string_view_repo_free(&svr);
+
+    // StringBuilder test = string_builder_create();
+    // string_builder_push_char(&test, 'A');
+    // string_builder_push_char(&test, 'B');
+    // string_builder_push_char(&test, 'C');
+    // string_builder_push_char(&test, 'D');
+    // string_builder_push_char(&test, 'E');
+    // string_builder_insert_char(&test, '1', 0);
+    // string_builder_insert_char(&test, '2', 4);
+    // string_builder_insert_char(&test, '3', test.length);
+    // string_builder_print(&test);
     return 0;
 }

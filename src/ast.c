@@ -4,6 +4,8 @@
 #include "ast.h"
 #include "args.h"
 #include "string_view.h"
+#include "injection_points.h"
+#include "string_builder.h"
 
 
 Type* ast_make_atom(StringView name)
@@ -130,7 +132,7 @@ void ast_print_type(Type* type)
             break;
         case TT_STRUCT:
             printf("struct<");
-            ast_print_type(type->as.static_.inner);
+            ast_print_type(type->as.struct_.inner);
             printf(">");
             break;
         case TT_ARR:
@@ -162,8 +164,82 @@ void ast_print_ntp(NameTypePair* ntp)
     ast_print_type(t);
 }
 
-void ast_translate_to_c(NameTypePair ntp, StringBuilder* sb)
+InjectionPoints ast_translate_to_c(StringView name, Type* type, StringBuilder* sb)
 {
-    StringView name = ntp.name;
-    assert(0 && "Unimplemented.");
+    switch (type->kind) {
+        case TT_ATOM: {
+                InjectionPoints injections;
+                string_builder_push_sv(sb, type->as.atom.name);
+                string_builder_push_char(sb, ' ');
+                injections.front = sb->length;
+                string_builder_push_sv(sb, name);
+                injections.back = sb->length;
+                return injections;
+            }
+        case TT_STRUCT: {
+                InjectionPoints injections;
+                string_builder_push_cstring(sb, "struct");
+                string_builder_push_char(sb, ' ');
+                injections = ast_translate_to_c(name, type->as.struct_.inner, sb);
+                return injections;
+            }
+        case TT_CONST: {
+                InjectionPoints injections;
+                string_builder_push_cstring(sb, "const");
+                string_builder_push_char(sb, ' ');
+                injections = ast_translate_to_c(name, type->as.const_.inner, sb);
+                return injections;
+            }
+        case TT_STATIC: {
+                InjectionPoints injections;
+                string_builder_push_cstring(sb, "static");
+                string_builder_push_char(sb, ' ');
+                injections = ast_translate_to_c(name, type->as.static_.inner, sb);
+                return injections;
+            }
+        case TT_PTR: {
+                switch (type->as.ptr.inner->kind) {
+                    case TT_ARR:
+                    case TT_FUNC: {
+                            InjectionPoints injections;
+                            injections = ast_translate_to_c(name, type->as.ptr.inner, sb);
+                            string_builder_insert_char(sb, ')', injections.back);
+                            string_builder_insert_char(sb, '*', injections.front);
+                            string_builder_insert_char(sb, '(', injections.front);
+                            return injections;
+                        }
+                    default: {
+                            InjectionPoints injections;
+                            injections = ast_translate_to_c(name, type->as.ptr.inner, sb);
+                            string_builder_insert_char(sb,'*', injections.front);
+                            injections.front++;
+                            injections.back++;
+                            return injections;
+                        }
+                }
+            }
+        case TT_ARR: {
+                InjectionPoints injections;
+                injections = ast_translate_to_c(name, type->as.arr.elem, sb);
+                string_builder_insert_char(sb, ']', injections.back);
+                string_builder_insert_number(sb, type->as.arr.size, injections.back);
+                string_builder_insert_char(sb, '[', injections.back);
+                return injections;
+            }
+        case TT_FUNC: {
+                InjectionPoints injections;
+                injections = ast_translate_to_c(name, type->as.func.ret, sb);
+                string_builder_push_char(sb, '(');
+                for (size_t i = 0; i < type->as.func.args.size; i++) {
+                    if (i != 0) { string_builder_push_cstring(sb, ", ");  }
+                    StringView arg_name = type->as.func.args.data[i].name;
+                    Type* arg_type = type->as.func.args.data[i].type;
+                    ast_translate_to_c(arg_name, arg_type, sb);
+                }
+                string_builder_push_char(sb, ')');
+                return injections;
+            }
+        default:
+            assert(0 && "Unreachable.");
+    }
 }

@@ -5,7 +5,6 @@
 #include <stdint.h>
 
 typedef struct StringView StringView;
-
 struct StringView {
     const char* ptr;
     size_t length;
@@ -13,15 +12,17 @@ struct StringView {
 
 void string_view_print(StringView* sv);
 uint8_t string_view_strcmp(StringView* sv, const char* str);
+void string_view_free(StringView* sv);
 
 typedef struct StringViewRepo StringViewRepo;
 struct StringViewRepo {
     StringView* data;
     size_t size;
     size_t capacity;
+    uint8_t elem_is_owner;
 };
 
-StringViewRepo string_view_repo_create();
+StringViewRepo string_view_repo_create(uint8_t elem_is_owner);
 void string_view_repo_push(StringViewRepo* svr, StringView sv);
 void string_view_repo_print(StringViewRepo* svr);
 void string_view_repo_free(StringViewRepo* svr);

@@ -14,13 +14,18 @@ void string_view_print(StringView* sv)
     printf("%.*s", (int)sv->length, sv->ptr);
 }
 
-
-StringViewRepo string_view_repo_create()
+void string_view_free(StringView* sv)
 {
-    StringViewRepo svr;    
+    free((char*)sv->ptr);
+}
+
+StringViewRepo string_view_repo_create(uint8_t elem_is_owner)
+{
+    StringViewRepo svr;
     svr.capacity = 4;
     svr.size = 0;
     svr.data = (StringView*)malloc(svr.capacity * sizeof(StringView));
+    svr.elem_is_owner = elem_is_owner;
     return svr;
 }
 
@@ -51,5 +56,10 @@ void string_view_repo_print(StringViewRepo* svr)
 
 void string_view_repo_free(StringViewRepo* svr)
 {
+    if (svr->elem_is_owner) {
+        for (size_t i = 0; i < svr->size; i++) {
+            string_view_free(&svr->data[i]);
+        }
+    }
     free(svr->data);
 }

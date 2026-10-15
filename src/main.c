@@ -31,25 +31,22 @@ int main(int argc, char **argv)
     fclose(in_file);
 
     Parser parser;
-    StringViewRepo svr = string_view_repo_create();
+    StringViewRepo svr_dests = string_view_repo_create(0);
+    StringViewRepo svr_srcs = string_view_repo_create(1);
 
     parser_init(&parser, text, len);
     char_bank_init();
-    parser_parse(&parser, &svr, text);
-    string_view_repo_print(&svr);
+    parser_parse(&parser, &svr_dests, &svr_srcs, text);
+    string_view_repo_print(&svr_dests);
+    string_view_repo_print(&svr_srcs);
 
     parser_free(&parser);
-    string_view_repo_free(&svr);
+    string_view_repo_free(&svr_dests);
+    string_view_repo_free(&svr_srcs);
 
-    // StringBuilder test = string_builder_create();
-    // string_builder_push_char(&test, 'A');
-    // string_builder_push_char(&test, 'B');
-    // string_builder_push_char(&test, 'C');
-    // string_builder_push_char(&test, 'D');
-    // string_builder_push_char(&test, 'E');
-    // string_builder_insert_char(&test, '1', 0);
-    // string_builder_insert_char(&test, '2', 4);
-    // string_builder_insert_char(&test, '3', test.length);
-    // string_builder_print(&test);
+    /***
+    TODO - print text to a file while replacing svs in svr_dests with svr_srcs
+    ***/
+    
     return 0;
 }

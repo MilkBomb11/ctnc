@@ -141,7 +141,7 @@ NameTypePair parser_parse_ntp(Parser* parser)
     return ast_make_ntp(id.sv, t);
 }
 
-void parser_parse(Parser* parser, StringViewRepo* svr, const char* text)
+void parser_parse(Parser* parser, StringViewRepo* replaces_dests, StringViewRepo* replace_srcs, const char* text)
 {
     while (parser_advance(parser)) {
         if (parser_match(parser, CLEX_id)) {
@@ -152,10 +152,10 @@ void parser_parse(Parser* parser, StringViewRepo* svr, const char* text)
 
                 const char* end_ptr = parser->prev.sv.ptr + parser->prev.sv.length;
                 int length = end_ptr - start_ptr;
-                StringView sv;
-                sv.ptr = start_ptr;
-                sv.length = length;
-                string_view_repo_push(svr, sv);
+                StringView sv_dest;
+                sv_dest.ptr = start_ptr;
+                sv_dest.length = length;
+                string_view_repo_push(replaces_dests, sv_dest);
                 
                 NameTypePair ntp;
                 ntp.name = id.sv;
@@ -165,10 +165,11 @@ void parser_parse(Parser* parser, StringViewRepo* svr, const char* text)
 
                 StringBuilder sb = string_builder_create();
                 ast_translate_to_c(ntp.name, ntp.type, &sb);
-                string_builder_push_char(&sb, '\n');
-                string_builder_print(&sb);
 
-                string_builder_free(&sb);
+                StringView sv_src;
+                sv_src.ptr = sb.data;
+                sv_src.length = sb.length; // move sb's data to sv_src so don't free sb.
+                string_view_repo_push(replace_srcs, sv_src);
                 ast_free_type(t);
             }
         }

@@ -9,6 +9,20 @@ uint8_t string_view_strcmp(StringView* sv, const char* str)
     return strncmp(sv->ptr, str, sv->length);
 }
 
+const char* string_view_ends_with(StringView* sv, const char* str)
+{
+    size_t len = strlen(str);    
+    if (len > sv->length) { return 0; }
+    const char* start_ptr = sv->ptr + sv->length - len;
+    StringView new_sv;
+    new_sv.ptr = start_ptr;
+    new_sv.length = len;
+    if (!string_view_strcmp(&new_sv, str)) {
+        return new_sv.ptr; 
+    }
+    return NULL;
+}
+
 void string_view_print(StringView* sv)
 {
     printf("%.*s", (int)sv->length, sv->ptr);

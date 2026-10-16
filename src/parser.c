@@ -160,8 +160,6 @@ void parser_parse(Parser* parser, StringViewRepo* replaces_dests, StringViewRepo
                 NameTypePair ntp;
                 ntp.name = id.sv;
                 ntp.type = t;
-                ast_print_ntp(&ntp);
-                printf("\n");
 
                 StringBuilder sb = string_builder_create();
                 ast_translate_to_c(ntp.name, ntp.type, &sb);

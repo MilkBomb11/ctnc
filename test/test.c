@@ -13,17 +13,17 @@ int main(int argc, char* argv[]) {
     printf("%s\n", e->s);
     return 0;
 }
-x: static{const{ptr{int}}};
-zd: static{const{ptr{struct x}}};
-arrx: ptr{arr{View,3}} a
+static const int *x;
+static const struct x *zd;
+View (*arrx)[3] a
 
-f: fn (x: int64, velocity: static{ptr{int}}, z: struct hello, he: int86, hello: size_t) -> const{float};
-x: ptr { fn(x: fn () -> struct y ) -> ptr{ptr{void}} };
-y: fn(x: fn () -> struct y ) -> void;
+const float f(int64 x, static int *velocity, struct hello z, int86 he, size_t hello);
+void **(*x)(struct y x());
+void y(struct y x());
 
-f: ptr {fn (val: const{ptr{char}}) -> ptr{const{char}} };
+const char *(*f)(const char *val);
 
-add: fn (x: struct hello, y: Int64, update: ptr{fn (hello: ptr{int}) -> const {static{ptr{ size_t }}} } ) -> ptr{struct T}
+struct T *add(struct hello x, Int64 y, const static size_t *(*update)(int *hello))
 {
 
 }

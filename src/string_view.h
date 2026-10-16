@@ -13,6 +13,7 @@ struct StringView {
 void string_view_print(StringView* sv);
 uint8_t string_view_strcmp(StringView* sv, const char* str);
 void string_view_free(StringView* sv);
+const char* string_view_ends_with(StringView* sv, const char* str);
 
 typedef struct StringViewRepo StringViewRepo;
 struct StringViewRepo {
